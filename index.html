@@ -140,11 +140,12 @@
     <!--    <audio id="audio" controls autoplay></audio>-->
     <div class="sticky-player">
         <audio id="audio" preload="auto"></audio>
-        <div class="progress-container">
-            <div id="progressBar"></div>
-        </div>
+<!--        <div class="progress-container">-->
+<!--            <div id="progressBar"></div>-->
+<!--        </div>-->
             <div class="controls">
                 <button id="prevButton">⏮️ Prev</button>
+                <button id="playPauseButton">▶️</button>
                 <button id="nextButton">⏭️ Next</button>
                 <button id="loopButton">🔁 Loop: Off</button>
                 <button id="rewindButton">⏪ -10s</button>
@@ -207,6 +208,7 @@
     const list = document.getElementById("playlist");
     const loopButton = document.getElementById("loopButton");
     const prevButton = document.getElementById("prevButton");
+    const playPauseButton = document.getElementById("playPauseButton");
     const nextButton = document.getElementById("nextButton");
     const rewindButton = document.getElementById("rewindButton");
     const fastForwardButton = document.getElementById("fastForwardButton");
@@ -274,6 +276,22 @@
 
     volumeSlider.addEventListener("input", () => {
         audio.volume = parseFloat(volumeSlider.value);
+    });
+
+    playPauseButton.addEventListener("click", () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    });
+
+    audio.addEventListener("play", () => {
+        playPauseButton.textContent = "⏸️";
+    });
+
+    audio.addEventListener("pause", () => {
+        playPauseButton.textContent = "▶️";
     });
 
     loadTrack(currentIndex);
