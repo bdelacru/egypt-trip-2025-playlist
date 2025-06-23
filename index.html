@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🎶 Egypt Trip Vibes</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background: #f9f4e8;
+            color: #333;
+        }
+        h1 { text-align: center; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        .now-playing { font-weight: bold; }
+        audio { width: 100%; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+<h1>🎶 Egypt Trip Vibes</h1>
+<ul id="playlist"></ul>
+<audio id="audio" controls autoplay></audio>
+
+<script>
+    const playlist = [
+        { title: "Lord I've Strayed - Jonah", file: "Lord I've Strayed - Jonah" },
+        { title: "Don't Stop Praying - Matthew West", file: "Matthew West - Don't Stop Praying (Music Video).mp3" },
+        { title: "Overwhelmed - Big Daddy Weave", file: "Big Daddy Weave - Overwhelmed [Official Music Video].mp3" },
+        { title: "Light The Fire In My Heart Again - Breakaway", file: "Light The Fire In My Heart Again By： Breakaway (With Lyrics).mp3" },
+        { title: "Kenyan Praise Medley - ", file: "Kenyan Praise Medley.mp3" },
+        { title: "In One of My Dreams - ", file: "In One of My Dreams (ft. Erin Melek).mp3" },
+        { title: "I Cannot Come to the Banquet -", file: "I Cannot Come to the Banquet (Erin & Erika Melek).mp3" },
+        { title: "(Arabic)I Am the Son of the King – St. Abraam Ministry ", file: "ترنيمة أنا ابن الملك - خدمة الانبا ابرام - أولاد الملك.mp3" },
+        { title: "(Arabic)Ana El 7out– Better Life Kids", file: "ترنيمة انا الحوت - الحياة الافضل اطفال ｜ Ana El 7out.mp3" },
+        { title: "(Arabic)Knisty Knisty - Koogi TV", file: "ترنيمة كنيستى كنيستى - قناة كوجى - Knisty Knisty Koogi TV.mp3" },
+        { title: "Rend Collective - Build Your Kingdom Here", file: "Rend Collective - Build Your Kingdom Here" },
+    ];
+
+    const audio = document.getElementById("audio");
+    const list = document.getElementById("playlist");
+    let currentIndex = 0;
+
+    function loadTrack(index) {
+        const track = playlist[index];
+        audio.src = track.file;
+        [...list.children].forEach(li => li.classList.remove("now-playing"));
+        list.children[index].classList.add("now-playing");
+    }
+
+    playlist.forEach((track, i) => {
+        const li = document.createElement("li");
+        li.textContent = track.title;
+        li.onclick = () => {
+            currentIndex = i;
+            loadTrack(currentIndex);
+            audio.play();
+        };
+        list.appendChild(li);
+    });
+
+    audio.onended = () => {
+        currentIndex = (currentIndex + 1) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+    };
+
+    loadTrack(currentIndex);
+</script>
+</body>
+</html>
