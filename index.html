@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -47,16 +47,37 @@
         button#prevButton:hover, button#nextButton:hover {
             background: #ffeac2;
         }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .controls button {
+            background: #fff4e0;
+            border: 2px solid #e0c29b;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .controls button:hover {
+            background: #ffeac2;
+        }
     </style>
 </head>
 <body>
 <h1>🎶 Egypt Trip Vibes</h1>
 <ul id="playlist"></ul>
-<audio id="audio" controls autoplay></audio>
-<button id="loopButton">🔁 Loop: Off</button>
-<div style="margin-top: 1rem;">
-    <button id="prevButton">⏮️ Previous</button>
-    <button id="nextButton">⏭️ Next</button>
+<audio id="audio" preload="auto"></audio>
+<div class="controls">
+    <button id="prevButton">⏮️</button>
+    <button id="playPauseButton">▶️</button>
+    <button id="nextButton">⏭️</button>
+    <button id="loopButton">🔁 Loop: Off</button>
 </div>
 <script>
     const playlist = [
@@ -127,7 +148,28 @@
         loopButton.textContent = audio.loop ? "🔁 Loop: On" : "🔁 Loop: Off";
     });
 
+    const playPauseButton = document.getElementById("playPauseButton");
+
+    playPauseButton.addEventListener("click", () => {
+        if (audio.paused) {
+            audio.play();
+            playPauseButton.textContent = "⏸️";
+        } else {
+            audio.pause();
+            playPauseButton.textContent = "▶️";
+        }
+    });
+
+    audio.addEventListener("play", () => {
+        playPauseButton.textContent = "⏸️";
+    });
+
+    audio.addEventListener("pause", () => {
+        playPauseButton.textContent = "▶️";
+    });
+
     loadTrack(currentIndex);
 </script>
 </body>
 </html>
+>
