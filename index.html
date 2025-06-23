@@ -84,6 +84,15 @@
             background: var(--tan-hover);
         }
 
+        .controls input[type="range"] {
+            appearance: none;
+            height: 6px;
+            border-radius: 5px;
+            background: #e0c29b;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
         @media screen and (max-width: 480px) {
             h1 {
                 font-size: 1.4rem;
@@ -113,6 +122,10 @@
         <button id="prevButton">⏮️ Prev</button>
         <button id="nextButton">⏭️ Next</button>
         <button id="loopButton">🔁 Loop: Off</button>
+        <button id="rewindButton">⏪ -10s</button>
+        <button id="fastForwardButton">+10s ⏩</button>
+        <button id="muteButton">🔇 Mute</button>
+        <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1" style="vertical-align: middle; width: 100px;" />
     </div>
 </div>
 
@@ -137,6 +150,10 @@
     const loopButton = document.getElementById("loopButton");
     const prevButton = document.getElementById("prevButton");
     const nextButton = document.getElementById("nextButton");
+    const rewindButton = document.getElementById("rewindButton");
+    const fastForwardButton = document.getElementById("fastForwardButton");
+    const muteButton = document.getElementById("muteButton");
+    const volumeSlider = document.getElementById("volumeSlider");
     let currentIndex = 0;
 
     function loadTrack(index) {
@@ -182,6 +199,23 @@
         currentIndex = (currentIndex + 1) % playlist.length;
         loadTrack(currentIndex);
         audio.play();
+    });
+
+    rewindButton.addEventListener("click", () => {
+        audio.currentTime = Math.max(audio.currentTime - 10, 0);
+    });
+
+    fastForwardButton.addEventListener("click", () => {
+        audio.currentTime = Math.min(audio.currentTime + 10, audio.duration);
+    });
+
+    muteButton.addEventListener("click", () => {
+        audio.muted = !audio.muted;
+        muteButton.textContent = audio.muted ? "🔈 Unmute" : "🔇 Mute";
+    });
+
+    volumeSlider.addEventListener("input", () => {
+        audio.volume = parseFloat(volumeSlider.value);
     });
 
     loadTrack(currentIndex);
