@@ -54,7 +54,10 @@
 <ul id="playlist"></ul>
 <audio id="audio" controls autoplay></audio>
 <button id="loopButton">🔁 Loop: Off</button>
-
+<div style="margin-top: 1rem;">
+    <button id="prevButton">⏮️ Previous</button>
+    <button id="nextButton">⏭️ Next</button>
+</div>
 <script>
     const playlist = [
         {title: "Lord I've Strayed - Jonah", file: "egypt-trip-playlist/Lord I've Strayed - Jonah.mp3"},
@@ -118,10 +121,6 @@
         audio.play();
     });
 
-    <div style="margin-top: 1rem;">
-        <button id="prevButton">⏮️ Previous</button>
-        <button id="nextButton">⏭️ Next</button>
-    </div>
 
     loopButton.addEventListener("click", () => {
         audio.loop = !audio.loop;
