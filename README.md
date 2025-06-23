@@ -52,27 +52,19 @@ Open index.html in a browser, or run a local server:
 
 With Python 3 installed:
 
-bash
-Copy
-Edit
 python -m http.server
 Then visit http://localhost:8000 in your browser.
 
 🔧 Customize
 To add a song: Edit script/playlist.js and add an object to the playlist array:
 
-js
-Copy
-Edit
 {
 title: "Song Title",
 file: "egypt-trip-playlist/song.mp3",
 cover: "cover/standardCover1.png",
 lyrics: `Optional multiline lyrics...`
 }
-To change the player style: Edit style.css.
 
-To add icons or custom cover art: Place new files in the cover/ folder and reference them in playlist.js.
 
 🌍 Live Demo
 Hosted via GitHub Pages:
@@ -83,14 +75,6 @@ Built with ❤️ by Betsy De La Cruz for spiritual reflection and joyful worshi
 
 📜 License
 This project is free for personal use. For reuse or distribution of music files, please ensure you have proper rights or permissions.
-
-yaml
-Copy
-Edit
-
----
-
-Let me know if you want a `screenshot.png` placeholder included or if you'd like to generate badges (like GitHub Pages deploy status).
 
 
 
