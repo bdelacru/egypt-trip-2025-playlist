@@ -54,11 +54,6 @@
             background: var(--tan-accent);
         }
 
-        .now-playing {
-            font-weight: bold;
-            background: var(--tan-hover);
-        }
-
         audio {
             width: 100%;
             margin: 1rem 0;
@@ -102,10 +97,20 @@
         .now-playing-bar {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #444;
+            flex-wrap: nowrap;
+            overflow: hidden;
         }
+
+        .now-playing-bar span {
+            flex-shrink: 0;
+            width: 40px;
+            text-align: center;
+        }
+
 
         .progress-container {
             flex-grow: 1;
