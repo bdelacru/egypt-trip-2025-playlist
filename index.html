@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>🎶 Egypt Trip Vibes</title>
 
@@ -25,6 +25,7 @@
             max-width: 700px;
             margin: auto;
             padding: 1rem;
+            padding-bottom: 150px;
         }
 
         h1 {
@@ -64,20 +65,14 @@
         }
 
         .controls {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
         }
 
         .controls button {
-            background: var(--tan-accent);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .controls button:hover {
@@ -91,6 +86,32 @@
             background: #e0c29b;
             margin-left: 10px;
             cursor: pointer;
+        }
+        .sticky-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #f9f4e8;
+            border-top: 2px solid #e0c29b;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: #e0c29b;
         }
 
         @media screen and (max-width: 480px) {
@@ -116,33 +137,70 @@
 
     <ul id="playlist"></ul>
 
-    <audio id="audio" controls autoplay></audio>
+    <!--    <audio id="audio" controls autoplay></audio>-->
+    <div class="sticky-player">
+        <audio id="audio" preload="auto"></audio>
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+            <div class="controls">
+                <button id="prevButton">⏮️ Prev</button>
+                <button id="nextButton">⏭️ Next</button>
+                <button id="loopButton">🔁 Loop: Off</button>
+                <button id="rewindButton">⏪ -10s</button>
+                <button id="fastForwardButton">+10s ⏩</button>
+                <button id="muteButton">🔇 Mute</button>
+                <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1"
+                       style="vertical-align: middle; width: 100px;"/>
+            </div>
 
-    <div class="controls">
-        <button id="prevButton">⏮️ Prev</button>
-        <button id="nextButton">⏭️ Next</button>
-        <button id="loopButton">🔁 Loop: Off</button>
-        <button id="rewindButton">⏪ -10s</button>
-        <button id="fastForwardButton">+10s ⏩</button>
-        <button id="muteButton">🔇 Mute</button>
-        <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1" style="vertical-align: middle; width: 100px;" />
     </div>
 </div>
 
 <script>
     const playlist = [
         {title: "Lord I've Strayed - Jonah", file: "egypt-trip-playlist/Lord I've Strayed - Jonah.mp3"},
-        {title: "Don't Stop Praying - Matthew West", file: "egypt-trip-playlist/Matthew West - Don't Stop Praying (Music Video).mp3"},
-        {title: "Overwhelmed - Big Daddy Weave", file: "egypt-trip-playlist/Big Daddy Weave - Overwhelmed [Official Music Video].mp3"},
-        {title: "Light The Fire In My Heart Again - Breakaway", file: "egypt-trip-playlist/Light The Fire In My Heart Again By： Breakaway (With Lyrics).mp3"},
+        {
+            title: "Don't Stop Praying - Matthew West",
+            file: "egypt-trip-playlist/Matthew West - Don't Stop Praying (Music Video).mp3"
+        },
+        {
+            title: "Overwhelmed - Big Daddy Weave",
+            file: "egypt-trip-playlist/Big Daddy Weave - Overwhelmed [Official Music Video].mp3"
+        },
+        {
+            title: "Light The Fire In My Heart Again - Breakaway",
+            file: "egypt-trip-playlist/Light The Fire In My Heart Again By： Breakaway (With Lyrics).mp3"
+        },
         {title: "Kenyan Praise Medley - Erin Melek", file: "egypt-trip-playlist/Kenyan Praise Medley.mp3"},
-        {title: "In One of My Dreams - Erika Melek & Erin Melek", file: "egypt-trip-playlist/In One of My Dreams (ft. Erin Melek).mp3"},
-        {title: "I Cannot Come to the Banquet - Erin & Erika Melek", file: "egypt-trip-playlist/I Cannot Come to the Banquet (Erin & Erika Melek).mp3"},
-        {title: "(Arabic) I Am the Son of the King – St. Abraam Ministry", file: "egypt-trip-playlist/ترنيمة أنا ابن الملك - خدمة الانبا ابرام - أولاد الملك.mp3"},
-        {title: "(Arabic) Ana El 7out – Better Life Kids", file: "egypt-trip-playlist/ترنيمة انا الحوت - الحياة الافضل اطفال ｜ Ana El 7out.mp3"},
-        {title: "(Arabic) Knisty Knisty - Koogi TV", file: "egypt-trip-playlist/ترنيمة كنيستى كنيستى - قناة كوجى - Knisty Knisty Koogi TV.mp3"},
-        {title: "Build Your Kingdom Here - Rend Collective", file: "egypt-trip-playlist/Rend Collective - Build Your Kingdom Here OFFICIAL.mp3"},
-        {title: "You’re the True Shepherd - St. Mark DC Youth Live", file: "egypt-trip-playlist/You’re the True Shepherd -- St. Mark DC Youth Live.mp3"},
+        {
+            title: "In One of My Dreams - Erika Melek & Erin Melek",
+            file: "egypt-trip-playlist/In One of My Dreams (ft. Erin Melek).mp3"
+        },
+        {
+            title: "I Cannot Come to the Banquet - Erin & Erika Melek",
+            file: "egypt-trip-playlist/I Cannot Come to the Banquet (Erin & Erika Melek).mp3"
+        },
+        {
+            title: "(Arabic) I Am the Son of the King – St. Abraam Ministry",
+            file: "egypt-trip-playlist/ترنيمة أنا ابن الملك - خدمة الانبا ابرام - أولاد الملك.mp3"
+        },
+        {
+            title: "(Arabic) Ana El 7out – Better Life Kids",
+            file: "egypt-trip-playlist/ترنيمة انا الحوت - الحياة الافضل اطفال ｜ Ana El 7out.mp3"
+        },
+        {
+            title: "(Arabic) Knisty Knisty - Koogi TV",
+            file: "egypt-trip-playlist/ترنيمة كنيستى كنيستى - قناة كوجى - Knisty Knisty Koogi TV.mp3"
+        },
+        {
+            title: "Build Your Kingdom Here - Rend Collective",
+            file: "egypt-trip-playlist/Rend Collective - Build Your Kingdom Here OFFICIAL.mp3"
+        },
+        {
+            title: "You’re the True Shepherd - St. Mark DC Youth Live",
+            file: "egypt-trip-playlist/You’re the True Shepherd -- St. Mark DC Youth Live.mp3"
+        },
     ];
 
     const audio = document.getElementById("audio");
