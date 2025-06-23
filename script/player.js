@@ -41,10 +41,13 @@ seekBar.addEventListener("input", () => {
 
 playlist.forEach((track, i) => {
     const li = document.createElement("li");
+
     li.innerHTML = `
     <div class="song-title">${track.title}</div>
-    ${track.lyrics ? `<button class="lyrics-toggle">🎤 Show Lyrics</button>
-    <div class="lyrics hidden">${track.lyrics.replace(/\n/g, "<br>")}</div>` : ""}
+    ${track.lyrics ? `
+      <button class="lyrics-toggle">🎤 Show Lyrics</button>
+      <div class="lyrics hidden"><pre>${track.lyrics}</pre></div>
+    ` : ""}
   `;
 
     li.querySelector(".song-title").onclick = () => {
@@ -55,17 +58,18 @@ playlist.forEach((track, i) => {
 
     const toggleBtn = li.querySelector(".lyrics-toggle");
     if (toggleBtn) {
+        const lyricsDiv = li.querySelector(".lyrics");
         toggleBtn.onclick = (e) => {
-            e.stopPropagation(); // Prevent triggering song playback
-            const lyricsDiv = li.querySelector(".lyrics");
-            const showing = !lyricsDiv.classList.contains("hidden");
+            e.stopPropagation(); // Don't trigger song playback
+            const isVisible = !lyricsDiv.classList.contains("hidden");
             lyricsDiv.classList.toggle("hidden");
-            toggleBtn.textContent = showing ? "🎤 Show Lyrics" : "🎵 Hide Lyrics";
+            toggleBtn.textContent = isVisible ? "🎤 Show Lyrics" : "🎵 Hide Lyrics";
         };
     }
 
     playlistElement.appendChild(li);
 });
+
 
 
 loopButton.onclick = () => {
