@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🎶 Egypt Trip Vibes</title>
-
     <style>
         :root {
             --tan: #f9f4e8;
@@ -19,13 +18,13 @@
             padding: 1rem;
             background: var(--tan);
             color: #333;
+            padding-bottom: 160px;
         }
 
         .container {
             max-width: 700px;
             margin: auto;
             padding: 1rem;
-            padding-bottom: 150px;
         }
 
         h1 {
@@ -54,18 +53,93 @@
             background: var(--tan-accent);
         }
 
-        audio {
+        .now-playing {
+            font-weight: bold;
+            background: var(--tan-hover);
+        }
+
+        .sticky-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            margin: 1rem 0;
+            background: var(--tan);
+            border-top: 2px solid var(--border);
+            padding: 0.75rem 1rem;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .now-playing-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        #albumArt {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        #nowPlayingText {
+            font-size: 0.9rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .now-playing-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: #444;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .now-playing-bar span {
+            flex-shrink: 0;
+            width: 40px;
+            text-align: center;
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background-color: #e0c29b;
+            transition: width 0.2s linear;
         }
 
         .controls {
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .controls button {
+            background: var(--tan-accent);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -82,168 +156,119 @@
             margin-left: 10px;
             cursor: pointer;
         }
-        .sticky-player {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #f9f4e8;
-            border-top: 2px solid #e0c29b;
-            padding: 0.5rem 1rem;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
+
+        button#darkModeToggle {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 0.9rem;
+            padding: 6px 10px;
         }
 
-        .now-playing-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            font-size: 0.85rem;
-            color: #444;
-            flex-wrap: nowrap;
-            overflow: hidden;
+        body.dark-mode {
+            background: #121212;
+            color: #eee;
         }
 
-        .now-playing-bar span {
-            flex-shrink: 0;
-            width: 40px;
-            text-align: center;
+        body.dark-mode .now-playing-bar {
+            color: #ccc;
         }
 
-
-        .progress-container {
-            flex-grow: 1;
-            height: 6px;
-            background: #ddd;
-            border-radius: 3px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+        body.dark-mode ul#playlist li {
+            background: #1e1e1e;
+            border-color: #444;
         }
 
-        #progressBar {
-            height: 100%;
-            width: 0%;
-            background-color: #e0c29b;
-            transition: width 0.2s linear;
+        body.dark-mode ul#playlist li:hover {
+            background: #333;
         }
 
-        @media screen and (max-width: 480px) {
-            h1 {
-                font-size: 1.4rem;
-            }
+        body.dark-mode .controls button {
+            background: #2a2a2a;
+            color: #eee;
+            border-color: #555;
+        }
 
-            .controls button {
-                font-size: 0.9rem;
-                padding: 6px 12px;
-            }
+        body.dark-mode .progress-container {
+            background: #444;
+        }
 
-            ul#playlist li {
-                font-size: 0.95rem;
-                padding: 0.6rem 0.9rem;
-            }
+        body.dark-mode #progressBar {
+            background: #bb86fc;
         }
     </style>
 </head>
 <body>
+<button id="darkModeToggle">🌙 Dark Mode</button>
 <div class="container">
     <h1>🎶 Egypt Trip Vibes</h1>
-
     <ul id="playlist"></ul>
+</div>
 
-    <!--    <audio id="audio" controls autoplay></audio>-->
-    <div class="sticky-player">
-        <audio id="audio" preload="auto"></audio>
-        <div class="now-playing-bar">
-            <span id="currentTime">0:00</span>
-            <div class="progress-container">
-                <div id="progressBar"></div>
-            </div>
-            <span id="duration">0:00</span>
-        </div>
-            <div class="controls">
-                <button id="prevButton">⏮️ Prev</button>
-                <button id="playPauseButton">▶️</button>
-                <button id="nextButton">⏭️ Next</button>
-                <button id="loopButton">🔁 Loop: Off</button>
-                <button id="rewindButton">⏪ -10s</button>
-                <button id="fastForwardButton">+10s ⏩</button>
-                <button id="muteButton">🔇 Mute</button>
-                <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1"
-                       style="vertical-align: middle; width: 100px;"/>
-            </div>
-
+<div class="sticky-player">
+    <div class="now-playing-info">
+        <img id="albumArt" src="https://via.placeholder.com/40" alt="Album Cover" />
+        <p id="nowPlayingText">Now Playing: —</p>
     </div>
+    <div class="now-playing-bar">
+        <span id="currentTime">0:00</span>
+        <div class="progress-container">
+            <div id="progressBar"></div>
+        </div>
+        <span id="duration">0:00</span>
+    </div>
+    <div class="controls">
+        <button id="prevButton">⏮️ Prev</button>
+        <button id="playPauseButton">▶️</button>
+        <button id="nextButton">⏭️ Next</button>
+        <button id="loopButton">🔁 Loop: Off</button>
+        <button id="rewindButton">⏪ -10s</button>
+        <button id="fastForwardButton">+10s ⏩</button>
+        <button id="muteButton">🔇 Mute</button>
+        <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="1" />
+    </div>
+    <audio id="audio" preload="auto"></audio>
 </div>
 
 <script>
     const playlist = [
-        {title: "Lord I've Strayed - Jonah", file: "egypt-trip-playlist/Lord I've Strayed - Jonah.mp3"},
-        {
-            title: "Don't Stop Praying - Matthew West",
-            file: "egypt-trip-playlist/Matthew West - Don't Stop Praying (Music Video).mp3"
-        },
-        {
-            title: "Overwhelmed - Big Daddy Weave",
-            file: "egypt-trip-playlist/Big Daddy Weave - Overwhelmed [Official Music Video].mp3"
-        },
-        {
-            title: "Light The Fire In My Heart Again - Breakaway",
-            file: "egypt-trip-playlist/Light The Fire In My Heart Again By： Breakaway (With Lyrics).mp3"
-        },
-        {title: "Kenyan Praise Medley - Erin Melek", file: "egypt-trip-playlist/Kenyan Praise Medley.mp3"},
-        {
-            title: "In One of My Dreams - Erika Melek & Erin Melek",
-            file: "egypt-trip-playlist/In One of My Dreams (ft. Erin Melek).mp3"
-        },
-        {
-            title: "I Cannot Come to the Banquet - Erin & Erika Melek",
-            file: "egypt-trip-playlist/I Cannot Come to the Banquet (Erin & Erika Melek).mp3"
-        },
-        {
-            title: "(Arabic) I Am the Son of the King – St. Abraam Ministry",
-            file: "egypt-trip-playlist/ترنيمة أنا ابن الملك - خدمة الانبا ابرام - أولاد الملك.mp3"
-        },
-        {
-            title: "(Arabic) Ana El 7out – Better Life Kids",
-            file: "egypt-trip-playlist/ترنيمة انا الحوت - الحياة الافضل اطفال ｜ Ana El 7out.mp3"
-        },
-        {
-            title: "(Arabic) Knisty Knisty - Koogi TV",
-            file: "egypt-trip-playlist/ترنيمة كنيستى كنيستى - قناة كوجى - Knisty Knisty Koogi TV.mp3"
-        },
-        {
-            title: "Build Your Kingdom Here - Rend Collective",
-            file: "egypt-trip-playlist/Rend Collective - Build Your Kingdom Here OFFICIAL.mp3"
-        },
-        {
-            title: "You’re the True Shepherd - St. Mark DC Youth Live",
-            file: "egypt-trip-playlist/You’re the True Shepherd -- St. Mark DC Youth Live.mp3"
-        },
+        { title: "Lord I've Strayed - Jonah", file: "egypt-trip-playlist/Lord I've Strayed - Jonah.mp3" },
+        // Add more tracks here...
     ];
 
     const audio = document.getElementById("audio");
     const list = document.getElementById("playlist");
     const loopButton = document.getElementById("loopButton");
     const prevButton = document.getElementById("prevButton");
-    const playPauseButton = document.getElementById("playPauseButton");
     const nextButton = document.getElementById("nextButton");
     const rewindButton = document.getElementById("rewindButton");
     const fastForwardButton = document.getElementById("fastForwardButton");
     const muteButton = document.getElementById("muteButton");
     const volumeSlider = document.getElementById("volumeSlider");
+    const playPauseButton = document.getElementById("playPauseButton");
+    const progressBar = document.getElementById("progressBar");
     const currentTimeLabel = document.getElementById("currentTime");
     const durationLabel = document.getElementById("duration");
+    const nowPlayingText = document.getElementById("nowPlayingText");
+    const albumArt = document.getElementById("albumArt");
+    const darkModeToggle = document.getElementById("darkModeToggle");
+
     let currentIndex = 0;
+    let isDragging = false;
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? "0" + secs : secs}`;
+    }
 
     function loadTrack(index) {
         const track = playlist[index];
         audio.src = track.file;
-
         audio.loop = false;
         loopButton.textContent = "🔁 Loop: Off";
-
+        nowPlayingText.textContent = `Now Playing: ${track.title}`;
+        albumArt.src = "https://via.placeholder.com/40"; // You can replace this with per-track images
         [...list.children].forEach(li => li.classList.remove("now-playing"));
         list.children[index].classList.add("now-playing");
     }
@@ -259,11 +284,26 @@
         list.appendChild(li);
     });
 
-    audio.onended = () => {
-        currentIndex = (currentIndex + 1) % playlist.length;
-        loadTrack(currentIndex);
-        audio.play();
-    };
+    audio.addEventListener("timeupdate", () => {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        currentTimeLabel.textContent = formatTime(audio.currentTime);
+        durationLabel.textContent = formatTime(audio.duration);
+    });
+
+    document.querySelector(".progress-container").addEventListener("click", seekAudio);
+    document.querySelector(".progress-container").addEventListener("mousedown", () => isDragging = true);
+    window.addEventListener("mouseup", () => isDragging = false);
+    window.addEventListener("mousemove", (e) => {
+        if (isDragging) seekAudio(e);
+    });
+
+    function seekAudio(e) {
+        const rect = document.querySelector(".progress-container").getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const percent = offsetX / rect.width;
+        audio.currentTime = percent * audio.duration;
+    }
 
     loopButton.addEventListener("click", () => {
         audio.loop = !audio.loop;
@@ -315,25 +355,15 @@
         playPauseButton.textContent = "▶️";
     });
 
-    function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs < 10 ? "0" + secs : secs}`;
-    }
-
-    audio.addEventListener("timeupdate", () => {
-        const percent = (audio.currentTime / audio.duration) * 100;
-        progressBar.style.width = `${percent}%`;
-        currentTimeLabel.textContent = formatTime(audio.currentTime);
-        durationLabel.textContent = formatTime(audio.duration);
+    audio.addEventListener("ended", () => {
+        currentIndex = (currentIndex + 1) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
     });
 
-    document.querySelector(".progress-container").addEventListener("click", (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const width = rect.width;
-        const newTime = (clickX / width) * audio.duration;
-        audio.currentTime = newTime;
+    darkModeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        darkModeToggle.textContent = document.body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode";
     });
 
     loadTrack(currentIndex);
