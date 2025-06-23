@@ -99,19 +99,29 @@
             z-index: 1000;
         }
 
+        .now-playing-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
         .progress-container {
-            width: 100%;
+            flex-grow: 1;
             height: 6px;
             background: #ddd;
             border-radius: 3px;
-            margin: 5px 0;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         #progressBar {
             height: 100%;
             width: 0%;
-            background: #e0c29b;
+            background-color: #e0c29b;
+            transition: width 0.2s linear;
         }
 
         @media screen and (max-width: 480px) {
@@ -140,9 +150,13 @@
     <!--    <audio id="audio" controls autoplay></audio>-->
     <div class="sticky-player">
         <audio id="audio" preload="auto"></audio>
-<!--        <div class="progress-container">-->
-<!--            <div id="progressBar"></div>-->
-<!--        </div>-->
+        <div class="now-playing-bar">
+            <span id="currentTime">0:00</span>
+            <div class="progress-container">
+                <div id="progressBar"></div>
+            </div>
+            <span id="duration">0:00</span>
+        </div>
             <div class="controls">
                 <button id="prevButton">⏮️ Prev</button>
                 <button id="playPauseButton">▶️</button>
@@ -214,6 +228,8 @@
     const fastForwardButton = document.getElementById("fastForwardButton");
     const muteButton = document.getElementById("muteButton");
     const volumeSlider = document.getElementById("volumeSlider");
+    const currentTimeLabel = document.getElementById("currentTime");
+    const durationLabel = document.getElementById("duration");
     let currentIndex = 0;
 
     function loadTrack(index) {
@@ -292,6 +308,27 @@
 
     audio.addEventListener("pause", () => {
         playPauseButton.textContent = "▶️";
+    });
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? "0" + secs : secs}`;
+    }
+
+    audio.addEventListener("timeupdate", () => {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        currentTimeLabel.textContent = formatTime(audio.currentTime);
+        durationLabel.textContent = formatTime(audio.duration);
+    });
+
+    document.querySelector(".progress-container").addEventListener("click", (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const width = rect.width;
+        const newTime = (clickX / width) * audio.duration;
+        audio.currentTime = newTime;
     });
 
     loadTrack(currentIndex);
