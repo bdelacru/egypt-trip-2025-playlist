@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -6,79 +6,116 @@
     <title>🎶 Egypt Trip Vibes</title>
 
     <style>
+        :root {
+            --tan: #f9f4e8;
+            --tan-accent: #fff4e0;
+            --tan-hover: #ffeac2;
+            --border: #e0c29b;
+        }
+
         body {
-            font-family: sans-serif;
-            padding: 2rem;
-            background: #f9f4e8;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 1rem;
+            background: var(--tan);
             color: #333;
         }
-        h1 { text-align: center; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 10px 0; cursor: pointer; }
-        .now-playing { font-weight: bold; }
-        audio { width: 100%; margin-top: 1rem; }
 
-        button#loopButton {
-            background: #fff4e0;
-            border: 2px solid #e0c29b;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 1rem;
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        ul#playlist {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+
+        ul#playlist li {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 1rem;
+            transition: background 0.2s;
         }
 
-        button#loopButton:hover {
-            background: #ffeac2;
+        ul#playlist li:hover {
+            background: var(--tan-accent);
         }
 
-        button#prevButton, button#nextButton {
-            background: #fff4e0;
-            border: 2px solid #e0c29b;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-right: 10px;
+        .now-playing {
+            font-weight: bold;
+            background: var(--tan-hover);
         }
 
-        button#prevButton:hover, button#nextButton:hover {
-            background: #ffeac2;
+        audio {
+            width: 100%;
+            margin: 1rem 0;
         }
+
         .controls {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-top: 1.5rem;
         }
 
         .controls button {
-            background: #fff4e0;
-            border: 2px solid #e0c29b;
+            background: var(--tan-accent);
+            border: 2px solid var(--border);
             border-radius: 8px;
             padding: 8px 16px;
-            font-size: 1.2rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: background 0.3s;
         }
 
         .controls button:hover {
-            background: #ffeac2;
+            background: var(--tan-hover);
+        }
+
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .controls button {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+
+            ul#playlist li {
+                font-size: 0.95rem;
+                padding: 0.6rem 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-<h1>🎶 Egypt Trip Vibes</h1>
-<ul id="playlist"></ul>
-<audio id="audio" preload="auto"></audio>
-<div class="controls">
-    <button id="prevButton">⏮️</button>
-    <button id="playPauseButton">▶️</button>
-    <button id="nextButton">⏭️</button>
-    <button id="loopButton">🔁 Loop: Off</button>
+<div class="container">
+    <h1>🎶 Egypt Trip Vibes</h1>
+
+    <ul id="playlist"></ul>
+
+    <audio id="audio" controls autoplay></audio>
+
+    <div class="controls">
+        <button id="prevButton">⏮️ Prev</button>
+        <button id="nextButton">⏭️ Next</button>
+        <button id="loopButton">🔁 Loop: Off</button>
+    </div>
 </div>
+
 <script>
     const playlist = [
         {title: "Lord I've Strayed - Jonah", file: "egypt-trip-playlist/Lord I've Strayed - Jonah.mp3"},
@@ -98,6 +135,8 @@
     const audio = document.getElementById("audio");
     const list = document.getElementById("playlist");
     const loopButton = document.getElementById("loopButton");
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
     let currentIndex = 0;
 
     function loadTrack(index) {
@@ -127,8 +166,11 @@
         loadTrack(currentIndex);
         audio.play();
     };
-    const prevButton = document.getElementById("prevButton");
-    const nextButton = document.getElementById("nextButton");
+
+    loopButton.addEventListener("click", () => {
+        audio.loop = !audio.loop;
+        loopButton.textContent = audio.loop ? "🔁 Loop: On" : "🔁 Loop: Off";
+    });
 
     prevButton.addEventListener("click", () => {
         currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
@@ -142,34 +184,7 @@
         audio.play();
     });
 
-
-    loopButton.addEventListener("click", () => {
-        audio.loop = !audio.loop;
-        loopButton.textContent = audio.loop ? "🔁 Loop: On" : "🔁 Loop: Off";
-    });
-
-    const playPauseButton = document.getElementById("playPauseButton");
-
-    playPauseButton.addEventListener("click", () => {
-        if (audio.paused) {
-            audio.play();
-            playPauseButton.textContent = "⏸️";
-        } else {
-            audio.pause();
-            playPauseButton.textContent = "▶️";
-        }
-    });
-
-    audio.addEventListener("play", () => {
-        playPauseButton.textContent = "⏸️";
-    });
-
-    audio.addEventListener("pause", () => {
-        playPauseButton.textContent = "▶️";
-    });
-
     loadTrack(currentIndex);
 </script>
 </body>
 </html>
->
