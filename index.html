@@ -26,6 +26,7 @@
             max-width: 700px;
             margin: auto;
             padding: 1rem;
+            padding-bottom: 180px;
         }
 
         h1 {
@@ -64,11 +65,6 @@
 
         ul#playlist li:hover {
             background: var(--tan-accent);
-        }
-
-        .now-playing {
-            font-weight: bold;
-            background: var(--tan-hover);
         }
 
         .sticky-player {
@@ -169,7 +165,7 @@
     <ul id="playlist"></ul>
 </div>
 
-<div class="sticky-player">
+<div class="sticky-player" id="playerBar">
     <div class="now-playing-bar">
         <img id="albumArt" src="https://via.placeholder.com/50x50?text=🎵" alt="Album Cover">
         <div id="nowPlayingText">Now Playing: --</div>
@@ -371,6 +367,17 @@
             audio.play();
         }
     };
+
+    function adjustPaddingForPlayer() {
+        const player = document.getElementById("playerBar");
+        const container = document.querySelector(".container");
+        const playerHeight = player.offsetHeight;
+        container.style.paddingBottom = `${playerHeight + 20}px`; // 20px buffer
+    }
+
+    adjustPaddingForPlayer();
+
+    window.addEventListener("resize", adjustPaddingForPlayer);
 
     loadTrack(currentIndex);
 </script>
