@@ -32,6 +32,21 @@
         button#loopButton:hover {
             background: #ffeac2;
         }
+
+        button#prevButton, button#nextButton {
+            background: #fff4e0;
+            border: 2px solid #e0c29b;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        button#prevButton:hover, button#nextButton:hover {
+            background: #ffeac2;
+        }
     </style>
 </head>
 <body>
@@ -88,6 +103,25 @@
         loadTrack(currentIndex);
         audio.play();
     };
+    const prevButton = document.getElementById("prevButton");
+    const nextButton = document.getElementById("nextButton");
+
+    prevButton.addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+    });
+
+    nextButton.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % playlist.length;
+        loadTrack(currentIndex);
+        audio.play();
+    });
+
+    <div style="margin-top: 1rem;">
+        <button id="prevButton">⏮️ Previous</button>
+        <button id="nextButton">⏭️ Next</button>
+    </div>
 
     loopButton.addEventListener("click", () => {
         audio.loop = !audio.loop;
